@@ -1,33 +1,22 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
-import { BookOpen } from 'lucide-react';
+import { BookOpen } from "lucide-react";
 
-// Function to read SVG links from the public folder
-async function getLinks() {
+// Function to read categories from the public folder
+async function getCategories() {
   const publicPath = path.join(process.cwd(), "public");
 
   const categories = fs
     .readdirSync(publicPath, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory());
+    .filter((entry) => entry.isDirectory())
+    .map((category) => category.name);
 
-  const links: Record<string, string[]> = {};
-
-  for (const category of categories) {
-    const categoryPath = path.join(publicPath, category.name);
-    const items = fs
-      .readdirSync(categoryPath)
-      .filter((file) => file.endsWith(".svg"));
-
-    links[category.name] = items.map((file) => file.replace(".svg", ""));
-  }
-
-  return links;
+  return categories;
 }
 
 export default async function Home() {
-  const links = await getLinks();
-
+  const categories = await getCategories();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -43,26 +32,20 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(links).map(([category, items]) => (
+          {categories.map((category) => (
             <div
               key={category}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-transform hover:scale-105"
             >
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white capitalize mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                {category.replace("_", " ")}
+                {category.replace(/_/g, " ")}
               </h2>
-              <ul className="space-y-2">
-                {items.map((item) => (
-                  <li key={item} className="hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md">
-                    <Link
-                      href={`/${category}/${item}`}
-                      className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                    >
-                      {item.replace("_", " ")}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <Link
+                href={`/${category}`}
+                className="block px-3 py-2 text-blue-600 dark:text-blue-400 font-medium hover:underline"
+              >
+                Voir les notes →
+              </Link>
             </div>
           ))}
         </div>
