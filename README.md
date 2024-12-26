@@ -18,7 +18,7 @@ HEPIA SVG est une plateforme web permettant aux étudiants de l'HEPIA en informa
 
 ```bash
 # Cloner le repository
-git clone https://github.com/[votre-username]/hepia-svg.git
+git clone https://github.com/ArianDervishaj/HEPIA_SVG.git
 
 # Accéder au dossier
 cd hepia-svg
