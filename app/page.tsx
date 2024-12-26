@@ -3,6 +3,9 @@ import path from "path";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
+// Ensure this runs on the server and is statically generated
+export const dynamic = "force-static";
+
 // Function to read categories from the public folder
 async function getCategories() {
   const publicPath = path.join(process.cwd(), "public");
