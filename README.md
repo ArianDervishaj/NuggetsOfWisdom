@@ -32,4 +32,4 @@ pnpm dev
 ## 🌐 Déploiement
 
 Le site est actuellement déployé sur Vercel et accessible à l'adresse suivante:
-https://hepia-svg.vercel.app/
+https://www.nuggets-of-wisdom.dev/
