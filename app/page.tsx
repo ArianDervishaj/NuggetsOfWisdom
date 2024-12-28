@@ -27,7 +27,7 @@ export default async function Home() {
         <div className="text-center mb-16">
           <BookOpen className="w-16 h-16 mx-auto mb-4 text-blue-600 dark:text-blue-400" />
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Notes de cours HEPIA
+            Nuggets of Wisdom
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Mes notes au format SVG

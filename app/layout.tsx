@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Notes de cours HEPIA",
+  title: "Nuggets Of Wisdom",
   description: "Notes de cours HEPIA",
 };
 
