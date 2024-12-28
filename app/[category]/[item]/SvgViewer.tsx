@@ -14,7 +14,7 @@ export default function SvgViewer({ svgPath }: SvgViewerProps) {
   useEffect(() => {
     if (svgContainerRef.current) {
       const panZoomInstance = panzoom(svgContainerRef.current, {
-        maxZoom: 5, // Maximum zoom level
+        maxZoom: 10, // Maximum zoom level
         minZoom: 0.5, // Minimum zoom level
         zoomSpeed: 0.1, // Zoom sensitivity
         bounds: true, // Enable bounds to constrain movement
