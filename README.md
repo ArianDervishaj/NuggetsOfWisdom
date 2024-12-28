@@ -1,7 +1,7 @@
-# HEPIA SVG - Visualisateur de Notes de Cours
+# NuggetsOfWisdom - Visualisateur de Notes de Cours
 
 ## 📝 Description
-HEPIA SVG est une plateforme web permettant aux étudiants de l'HEPIA en informatique de visualiser mes notes de cours au format SVG. Cette solution facilite l'accès et la consultation des notes pour l'ensemble de la classe.
+NuggetsOfWisdom est une plateforme web permettant aux étudiants de l'HEPIA en informatique de visualiser mes notes de cours au format SVG. Cette solution facilite l'accès et la consultation des notes pour l'ensemble de la classe.
 
 ## ✨ Fonctionnalités
 
@@ -18,10 +18,10 @@ HEPIA SVG est une plateforme web permettant aux étudiants de l'HEPIA en informa
 
 ```bash
 # Cloner le repository
-git clone https://github.com/ArianDervishaj/HEPIA_SVG.git
+git clone https://github.com/ArianDervishaj/NuggetsOfWisdom.git
 
 # Accéder au dossier
-cd hepia-svg
+cd NuggetsOfWisdom
 
 # Installer les dépendances
 pnpm install
