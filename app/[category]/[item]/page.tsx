@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import SvgViewer from "./SvgViewer";
 
 interface Props {
-  params: Promise<{ category: string; item: string } >;
+  params: Promise<{ category: string; item: string }>;
 }
 
 export default async function SvgPage({ params }: Props) {
@@ -17,7 +17,9 @@ export default async function SvgPage({ params }: Props) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-center rounded-lg bg-white p-8 shadow-lg">
-          <h1 className="text-xl font-bold text-red-500 mb-4">Error: Invalid Parameters</h1>
+          <h1 className="text-xl font-bold text-red-500 mb-4">
+            Error: Invalid Parameters
+          </h1>
           <p className="text-gray-600">Please check the URL and try again.</p>
         </div>
       </div>
@@ -51,6 +53,17 @@ export default async function SvgPage({ params }: Props) {
             <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-4 overflow-hidden">
               {/* Pass the SVG path to your viewer component */}
               <SvgViewer svgPath={svgPath} />
+            </div>
+
+            {/* Download button */}
+            <div className="mt-4 flex justify-end">
+              <a
+                href={svgPath}
+                download={`${item}.svg`}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Télécharger le SVG
+              </a>
             </div>
           </div>
         </div>
