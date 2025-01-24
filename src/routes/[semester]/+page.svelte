@@ -8,10 +8,12 @@
 	const currentPath = page.url.pathname;
 </script>
 
-<h1 class="is-size-1">Cours</h1>
 <div>
-	{#each data.courses as course (course.id)}
-		<!-- Append course.name to the current path -->
-		<a href={currentPath + '/' + course.name}>{course.name.replace(/-/g, ' ')}<br /></a>
-	{/each}
+	<h1 class="is-size-1">Cours</h1>
+	<div>
+		{#each data.courses as course (course.id)}
+			<!-- Append course.name to the current path -->
+			<a href={currentPath + '/' + course.name}>{course.name.replace(/-/g, ' ')}<br /></a>
+		{/each}
+	</div>
 </div>

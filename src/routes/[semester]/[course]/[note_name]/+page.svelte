@@ -20,7 +20,9 @@
 	});
 </script>
 
-<h1>{data.note.name}</h1>
-<div id="svg-container" class="svg-container">
-	<img src={data.note.file_path} alt="SVG" />
+<div>
+	<h1>{data.note.name}</h1>
+	<div id="svg-container" class="svg-container">
+		<img src={data.note.file_path} alt="SVG" />
+	</div>
 </div>

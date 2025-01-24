@@ -3,9 +3,11 @@
 	export let data: PageData;
 </script>
 
-<h1 class="is-size-1">Semesters</h1>
 <div>
-	{#each data.semesters as semester (semester.id)}
-		<a href={semester.name}>{semester.name.replace(/-/g, ' ')}<br/></a>
-	{/each}
+	<h1 class="text-xl">Semesters</h1>
+	<div>
+		{#each data.semesters as semester (semester.id)}
+			<a href={semester.name}>{semester.name.replace(/-/g, ' ')}<br /></a>
+		{/each}
+	</div>
 </div>
