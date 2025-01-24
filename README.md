@@ -1,35 +1,38 @@
-# NuggetsOfWisdom - Visualisateur de Notes de Cours
+# sv
 
-## 📝 Description
-NuggetsOfWisdom est une plateforme web permettant aux étudiants de l'HEPIA en informatique de visualiser mes notes de cours au format SVG. Cette solution facilite l'accès et la consultation des notes pour l'ensemble de la classe.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## ✨ Fonctionnalités
+## Creating a project
 
-- Visualisation fluide des fichiers SVG
-- Navigation facile entre les différentes notes
-
-## 🚀 Technologies
-
-1. React.js
-2. Next.js
-3. Panzoom
-
-## 🛠️ Installation
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-# Cloner le repository
-git clone https://github.com/ArianDervishaj/NuggetsOfWisdom.git
+# create a new project in the current directory
+npx sv create
 
-# Accéder au dossier
-cd NuggetsOfWisdom
-
-# Installer les dépendances
-pnpm install
-
-# Lancer le serveur de développement
-pnpm dev
+# create a new project in my-app
+npx sv create my-app
 ```
-## 🌐 Déploiement
 
-Le site est actuellement déployé sur Vercel et accessible à l'adresse suivante:
-https://www.nuggets-of-wisdom.dev/
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
