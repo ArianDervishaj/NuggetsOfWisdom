@@ -18,10 +18,18 @@
 			});
 		}
 	});
+
+	// Function to trigger the download
+	function downloadSVG() {
+		const link = document.createElement('a');
+		link.href = data.note.file_path;
+		link.download = data.note.name + '.svg';
+		link.click();
+	}
 </script>
 
 <div class="container mx-auto w-full overflow-hidden px-4 py-8">
-	<h1 class="mb-6 text-center text-3xl font-bold text-green-700 ">
+	<h1 class="mb-6 text-center text-3xl font-bold text-green-700">
 		{data.note.name.replace(/-/g, ' ')}
 	</h1>
 	<div class="overflow-hidden">
@@ -36,4 +44,13 @@
 			/>
 		</div>
 	</div>
+</div>
+
+<div class="text-center">
+	<button
+		onclick={downloadSVG}
+		class="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+	>
+		Download SVG
+	</button>
 </div>
