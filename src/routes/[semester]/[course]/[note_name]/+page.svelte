@@ -20,9 +20,20 @@
 	});
 </script>
 
-<div>
-	<h1>{data.note.name}</h1>
-	<div id="svg-container" class="svg-container">
-		<img src={data.note.file_path} alt="SVG" />
+<div class="container mx-auto w-full overflow-hidden px-4 py-8">
+	<h1 class="mb-6 text-center text-3xl font-bold text-green-700 ">
+		{data.note.name.replace(/-/g, ' ')}
+	</h1>
+	<div class="overflow-hidden">
+		<div
+			id="svg-container"
+			class="svg-container flex h-[60vh] items-center justify-center rounded-lg border border-gray-200 bg-white shadow-md"
+		>
+			<img
+				src={data.note.file_path}
+				alt="SVG"
+				class="max-h-full max-w-full cursor-move object-contain"
+			/>
+		</div>
 	</div>
 </div>
