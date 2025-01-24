@@ -3,6 +3,7 @@ import sqlite3 from 'sqlite3';
 
 const db = new sqlite3.Database(DB_PATH);
 
+//Get a list of the semesters from the db
 export function getSemesters() {
 	const sql = 'SELECT * FROM semesters';
 	return new Promise((resolve, reject) => {
@@ -16,6 +17,7 @@ export function getSemesters() {
 	});
 }
 
+//Get a list of the courses for a specific semester from the db
 export function getCourses(semester: string) {
 	const sql = `
         SELECT * 
@@ -33,6 +35,7 @@ export function getCourses(semester: string) {
 	});
 }
 
+//Get a list of the notes for a specific course from the db
 export function getNotes(course: string) {
 	const sql = `
         SELECT * 
@@ -50,20 +53,20 @@ export function getNotes(course: string) {
 	});
 }
 
+//Get one note
 export function getNote(note_name: string) {
-    const sql = `
+	const sql = `
     SELECT * 
     FROM notes 
     WHERE name = ?
     `;
-    return new Promise((resolve, reject) => {
-        db.get(sql, [note_name], (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(row);
-            }
-        });
-    });
+	return new Promise((resolve, reject) => {
+		db.get(sql, [note_name], (err, row) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(row);
+			}
+		});
+	});
 }
-
