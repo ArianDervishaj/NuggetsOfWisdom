@@ -38,6 +38,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.8",
 		"fs": "0.0.1-security",
+		"panzoom": "^9.4.3",
 		"path": "^0.12.7",
 		"sqlite3": "^5.1.7"
 	}
