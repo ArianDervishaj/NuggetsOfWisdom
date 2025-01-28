@@ -1,11 +1,25 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	let username = '';
 	let password = '';
 	let errorMessage = '';
-	let loggedIn = false;
+	let token = ''; // Holds the JWT token
+	let semestersWithCourses = [];
+	let selectedSemester = '';
+	let selectedCourse = '';
+	let noteName = '';
+
+	// Fetch semesters and their courses from the server on page load
+	onMount(async () => {
+		const res = await fetch('/admin');
+		if (res.ok) {
+			const data = await res.json();
+			semestersWithCourses = data;
+		}
+	});
 
 	async function login() {
-		const res = await fetch('/admin/login', {
+		const res = await fetch('/admin', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -14,40 +28,126 @@
 		});
 
 		if (res.ok) {
-			loggedIn = true;
+			const data = await res.json();
+			token = data.token; // Save the JWT token
 			errorMessage = '';
 		} else {
 			errorMessage = 'Invalid credentials';
 		}
 	}
+
+	async function logout() {
+		token = ''; // Clear the local token
+		await fetch('/admin', {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	}
 </script>
 
-<div class="login-form">
-	<h1>Admin Login</h1>
-	{#if !loggedIn}
+<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+	<div class="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
 		<div>
-			<input type="text" bind:value={username} placeholder="Username" />
-			<input type="password" bind:value={password} placeholder="Password" />
-			<button on:click={login}>Login</button>
+			<h1 class="text-center text-3xl font-extrabold text-green-700">Admin Login</h1>
 		</div>
-		{#if errorMessage}
-			<p class="error">{errorMessage}</p>
-		{/if}
-	{:else}
-		<p>Logged in successfully! You can now upload SVGs.</p>
-	{/if}
-</div>
+		{#if !token}
+			<form class="mt-8 space-y-6" on:submit|preventDefault={login}>
+				<div class="-space-y-px rounded-md shadow-sm">
+					<input
+						type="text"
+						bind:value={username}
+						placeholder="Username"
+						required
+						class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+					/>
+					<input
+						type="password"
+						bind:value={password}
+						placeholder="Password"
+						required
+						class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+					/>
+				</div>
 
-<style>
-	.login-form {
-		max-width: 400px;
-		margin: auto;
-		padding: 1rem;
-		background: #f8f8f8;
-		border-radius: 8px;
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	}
-	.error {
-		color: red;
-	}
-</style>
+				{#if errorMessage}
+					<p class="text-center text-sm text-red-500">{errorMessage}</p>
+				{/if}
+
+				<div>
+					<button
+						type="submit"
+						class="group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+					>
+						Login
+					</button>
+				</div>
+			</form>
+		{:else}
+			<div class="space-y-4 text-center">
+				<p class="font-semibold text-green-600">Logged in successfully!</p>
+				<button
+					on:click={logout}
+					class="w-full rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+				>
+					Logout
+				</button>
+			</div>
+		{/if}
+
+		{#if token}
+			<form class="mt-8 space-y-6">
+				<div>
+					<label for="semester" class="block text-sm font-medium text-gray-700">Semester</label>
+					<select
+						id="semester"
+						bind:value={selectedSemester}
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+					>
+						<option value="" disabled>Select Semester</option>
+						{#each semestersWithCourses as semester}
+							<option value={semester.name}>{semester.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				{#if selectedSemester}
+					<div>
+						<label for="course" class="block text-sm font-medium text-gray-700">Course</label>
+						<select
+							id="course"
+							bind:value={selectedCourse}
+							class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+						>
+							<option value="" disabled>Select Course</option>
+							{#each semestersWithCourses.find((s) => s.name === selectedSemester)?.courses as course}
+								<option value={course.name}>{course.name}</option>
+							{/each}
+						</select>
+					</div>
+				{/if}
+
+				<div>
+					<label for="noteName" class="block text-sm font-medium text-gray-700">Note Name</label>
+					<input
+						type="text"
+						id="noteName"
+						bind:value={noteName}
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+						placeholder="Note Name"
+					/>
+				</div>
+
+				<div>
+					<button
+						type="submit"
+						class="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+					>
+						Upload Note
+					</button>
+				</div>
+			</form>
+		{/if}
+	</div>
+</div>
