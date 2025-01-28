@@ -17,7 +17,7 @@ export async function getSemesters() {
 // Get a list of the courses for a specific semester from the db
 export async function getCourses(semester) {
     const { data, error } = await supabase
-        .from('courses')<
+        .from('courses')
         .select('*')
         .eq('semester_id', (await getSemesterIdFromName(semester)));
     if (error) {
