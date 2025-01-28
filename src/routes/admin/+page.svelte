@@ -3,20 +3,33 @@
 	let username = '';
 	let password = '';
 	let errorMessage = '';
-	let token = ''; // Holds the JWT token
-	let semestersWithCourses = [];
+	let token = '';
+	let semesters = [];
+	let courses = [];
 	let selectedSemester = '';
 	let selectedCourse = '';
 	let noteName = '';
+	let svgFile: File | null = null; // Track the selected file
 
-	// Fetch semesters and their courses from the server on page load
+	// Fetch semesters from the server on page load
 	onMount(async () => {
 		const res = await fetch('/admin');
 		if (res.ok) {
 			const data = await res.json();
-			semestersWithCourses = data;
+			semesters = data;
 		}
 	});
+
+	// Fetch courses based on the selected semester
+	async function fetchCourses() {
+		const semester = semesters.find((s) => s.name === selectedSemester);
+
+		if (semester) {
+			courses = semester.courses;
+		} else {
+			courses = [];
+		}
+	}
 
 	async function login() {
 		const res = await fetch('/admin', {
@@ -44,6 +57,33 @@
 				'Content-Type': 'application/json'
 			}
 		});
+	}
+
+	// Function to handle form submission
+	async function handleSubmit() {
+		if (!selectedSemester || !selectedCourse || !noteName || !svgFile) {
+			errorMessage = 'Please fill in all the fields.';
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append('course_name', selectedCourse);
+		formData.append('name', noteName);
+		formData.append('file', svgFile);
+
+		// Send request to upload note
+		const res = await fetch('/admin/upload', {
+			method: 'POST',
+			body: formData
+		});
+
+		if (res.ok) {
+			errorMessage = '';
+			// Reset the form or provide feedback
+			alert('Note uploaded successfully!');
+		} else {
+			errorMessage = 'Failed to upload the note.';
+		}
 	}
 </script>
 
@@ -97,16 +137,17 @@
 		{/if}
 
 		{#if token}
-			<form class="mt-8 space-y-6">
+			<form class="mt-8 space-y-6" on:submit|preventDefault={handleSubmit}>
 				<div>
 					<label for="semester" class="block text-sm font-medium text-gray-700">Semester</label>
 					<select
 						id="semester"
 						bind:value={selectedSemester}
+						on:change={fetchCourses}
 						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
 					>
 						<option value="" disabled>Select Semester</option>
-						{#each semestersWithCourses as semester}
+						{#each semesters as semester}
 							<option value={semester.name}>{semester.name}</option>
 						{/each}
 					</select>
@@ -121,7 +162,7 @@
 							class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
 						>
 							<option value="" disabled>Select Course</option>
-							{#each semestersWithCourses.find((s) => s.name === selectedSemester)?.courses as course}
+							{#each courses as course}
 								<option value={course.name}>{course.name}</option>
 							{/each}
 						</select>
@@ -138,7 +179,19 @@
 						placeholder="Note Name"
 					/>
 				</div>
-
+				<div>
+					<label for="svgFile" class="block text-sm font-medium text-gray-700">SVG File</label>
+					<input
+						type="file"
+						id="svgFile"
+						accept="image/svg+xml"
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+						on:change={(e) => (svgFile = (e.target as HTMLInputElement).files?.[0] || null)}
+					/>
+				</div>
+				{#if errorMessage}
+					<p class="text-center text-sm text-red-500">{errorMessage}</p>
+				{/if}
 				<div>
 					<button
 						type="submit"

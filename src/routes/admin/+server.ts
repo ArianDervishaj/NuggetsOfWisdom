@@ -14,7 +14,7 @@ async function getSemestersWithCourses() {
 	const semesters = await getSemesters();
 	const semestersWithCourses = await Promise.all(
 		semesters.map(async (semester) => {
-			const courses = await getCourses(semester.name); // Use the name or ID, depending on your database schema
+			const courses = await getCourses(semester.name);
 			return { ...semester, courses };
 		})
 	);
