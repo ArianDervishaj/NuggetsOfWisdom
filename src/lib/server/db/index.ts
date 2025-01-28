@@ -1,116 +1,110 @@
-import { DB_PATH } from '$env/static/private';
-import sqlite3 from 'sqlite3';
+import { createClient } from "@supabase/supabase-js";
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
 
-const db = new sqlite3.Database(DB_PATH);
+const supabaseUrl = PUBLIC_SUPABASE_URL;
+const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
-//Get a list of the semesters from the db
-export function getSemesters() {
-	const sql = 'SELECT * FROM semesters';
-	return new Promise((resolve, reject) => {
-		db.all(sql, [], (err, rows) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(rows);
-			}
-		});
-	});
+export const supabase = createClient(supabaseUrl, supabaseKey);
+// Get a list of the semesters from the db
+export async function getSemesters() {
+    const { data, error } = await supabase.from('semesters').select('*');
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data;
 }
 
-//Get a list of the courses for a specific semester from the db
-export function getCourses(semester: string) {
-	const sql = `
-        SELECT * 
-        FROM courses 
-        WHERE semester_id = (SELECT id FROM semesters WHERE name = ?)
-    `;
-	return new Promise((resolve, reject) => {
-		db.all(sql, [semester], (err, rows) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(rows);
-			}
-		});
-	});
+// Get a list of the courses for a specific semester from the db
+export async function getCourses(semester) {
+    const { data, error } = await supabase
+        .from('courses')<
+        .select('*')
+        .eq('semester_id', (await getSemesterIdFromName(semester)));
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data;
 }
 
-//Get a list of the notes for a specific course from the db
-export function getNotes(course: string) {
-	const sql = `
-        SELECT * 
-        FROM notes 
-        WHERE course_id = (SELECT id FROM courses WHERE name = ?)
-    `;
-	return new Promise((resolve, reject) => {
-		db.all(sql, [course], (err, rows) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(rows);
-			}
-		});
-	});
+// Get a list of the notes for a specific course from the db
+export async function getNotes(course) {
+    const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('course_id', (await getCoursesIdFromName(course)));
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data;
 }
 
-//Get one note
-export function getNote(note_name: string) {
-	const sql = `
-    SELECT * 
-    FROM notes 
-    WHERE name = ?
-    `;
-	return new Promise((resolve, reject) => {
-		db.get(sql, [note_name], (err, row) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(row);
-			}
-		});
-	});
+// Get one note
+export async function getNote(note_name) {
+    const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('name', note_name)
+        .single();
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data;
 }
 
 // Admin User Authentication
-export function getAdminUser(username: string) {
-	const sql = 'SELECT * FROM admins WHERE username = ?';
-	return new Promise<any>((resolve, reject) => {
-		db.get(sql, [username], (err, row) => {
-			if (err) reject(err);
-			resolve(row);
-		});
-	});
+export async function getAdminUser(username) {
+    const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username)
+        .single();
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data;
 }
 
-function getCoursesIdFromName(course_name: string): Promise<number | null> {
-	const sql = 'SELECT id FROM courses WHERE name = ?';
-	return new Promise<number | null>((resolve, reject) => {
-		db.get(sql, [course_name], (err, row) => {
-			if (err) reject(err);
-			resolve(row ? row.id : null);
-		});
-	});
+// Get course ID from name
+async function getCoursesIdFromName(course_name) {
+    const { data, error } = await supabase
+        .from('courses')
+        .select('id')
+        .eq('name', course_name)
+        .single();
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data ? data.id : null;
 }
 
-export async function insertNewNotes(course_name: string, name: string, file_path: string) {
-	try {
-		const course_id = await getCoursesIdFromName(course_name);
+// Insert new notes
+export async function insertNewNotes(course_name, name, file_path) {
+    try {
+        const course_id = await getCoursesIdFromName(course_name);
+        if (course_id === null) {
+            throw new Error(`Course with name "${course_name}" not found.`);
+        }
 
-		if (course_id === null) {
-			throw new Error(`Course with name "${course_name}" not found.`);
-		}
+        const { error } = await supabase
+            .from('notes')
+            .insert([{ course_id, file_path, name }]);
+        if (error) {
+            throw new Error(error.message);
+        }
+    } catch (err) {
+        throw err;
+    }
+}
 
-		const sql = 'INSERT INTO notes (course_id, file_path, name) VALUES (?, ?, ?)';
-
-		return new Promise<void>((resolve, reject) => {
-			db.run(sql, [course_id, file_path, name], function (err) {
-				if (err) {
-					return reject(err);
-				}
-				resolve();
-			});
-		});
-	} catch (err) {
-		throw err;
-	}
+// Get semester ID from name (similar to the getCoursesIdFromName function)
+async function getSemesterIdFromName(semester_name) {
+    const { data, error } = await supabase
+        .from('semesters')
+        .select('id')
+        .eq('name', semester_name)
+        .single();
+    if (error) {
+        throw new Error(error.message);
+    }
+    return data ? data.id : null;
 }
