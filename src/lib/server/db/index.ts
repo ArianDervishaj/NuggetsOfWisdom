@@ -81,3 +81,36 @@ export function getAdminUser(username: string) {
 		});
 	});
 }
+
+function getCoursesIdFromName(course_name: string): Promise<number | null> {
+	const sql = 'SELECT id FROM courses WHERE name = ?';
+	return new Promise<number | null>((resolve, reject) => {
+		db.get(sql, [course_name], (err, row) => {
+			if (err) reject(err);
+			resolve(row ? row.id : null);
+		});
+	});
+}
+
+export async function insertNewNotes(course_name: string, name: string, file_path: string) {
+	try {
+		const course_id = await getCoursesIdFromName(course_name);
+
+		if (course_id === null) {
+			throw new Error(`Course with name "${course_name}" not found.`);
+		}
+
+		const sql = 'INSERT INTO notes (course_id, file_path, name) VALUES (?, ?, ?)';
+
+		return new Promise<void>((resolve, reject) => {
+			db.run(sql, [course_id, file_path, name], function (err) {
+				if (err) {
+					return reject(err);
+				}
+				resolve();
+			});
+		});
+	} catch (err) {
+		throw err;
+	}
+}
