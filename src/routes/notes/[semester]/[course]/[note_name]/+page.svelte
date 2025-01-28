@@ -22,8 +22,12 @@
 	// Function to trigger the download
 	function downloadSVG() {
 		const link = document.createElement('a');
-		link.href = data.note.file_path;
-		link.download = data.note.name + '.svg';
+
+		link.href = `/${data.note.file_path}`;
+
+		const fileName = data.note.file_path.split('/').pop();
+		link.download = fileName;
+
 		link.click();
 	}
 </script>
@@ -38,7 +42,7 @@
 			class="svg-container flex h-[60vh] items-center justify-center rounded-lg border border-gray-200 bg-white shadow-md"
 		>
 			<img
-				src={data.note.file_path}
+				src={`/${data.note.file_path}`}
 				alt="SVG"
 				class="max-h-full max-w-full cursor-move object-contain"
 			/>
