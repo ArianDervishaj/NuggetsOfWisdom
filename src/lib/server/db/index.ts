@@ -73,7 +73,7 @@ export function getNote(note_name: string) {
 
 // Admin User Authentication
 export function getAdminUser(username: string) {
-	const sql = 'SELECT * FROM admin_users WHERE username = ?';
+	const sql = 'SELECT * FROM admins WHERE username = ?';
 	return new Promise<any>((resolve, reject) => {
 		db.get(sql, [username], (err, row) => {
 			if (err) reject(err);
