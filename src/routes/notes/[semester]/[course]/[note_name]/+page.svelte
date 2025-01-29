@@ -41,11 +41,8 @@
 			id="svg-container"
 			class="svg-container flex h-[60vh] items-center justify-center rounded-lg border border-gray-200 bg-white shadow-md"
 		>
-			<img
-				src={`${data.note.file_path}`}
-				alt="SVG"
-				class="max-h-full max-w-full cursor-move object-contain"
-			/>
+			<object type="image/svg+xml" data="{`${data.note.file_path}`}" aria-label="svg" class="max-h-full max-w-full cursor-move object-contain"></object>
+
 		</div>
 	</div>
 </div>
