@@ -34,9 +34,7 @@ export async function POST({ request }) {
 		}
 
 		// Insert metadata into the database with the public URL of the file
-		const fileUrl = data?.Key
-			? supabase.storage.from('uploads').getPublicUrl(data.Key).publicURL
-			: '';
+		const fileUrl = supabase.storage.from('uploads').getPublicUrl(`notes/${file.name}`).publicURL;
 		await insertNewNotes(course_name, name, fileUrl);
 
 		return json({ success: true });
