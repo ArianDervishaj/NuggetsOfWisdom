@@ -1,48 +1,19 @@
-import { getAdminUser, getSemesters, getCourses } from '$lib/server/db';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { supabase } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 import cookie from 'cookie';
-import { JWT_SECRET } from '$env/static/private';
 
-if (!JWT_SECRET) {
-	throw new Error('JWT_SECRET is not defined');
-}
-
-// Helper function to fetch all semesters with their courses
-async function getSemestersWithCourses() {
-	const semesters = await getSemesters();
-	const semestersWithCourses = await Promise.all(
-		semesters.map(async (semester) => {
-			const courses = await getCourses(semester.name);
-			return { ...semester, courses };
-		})
-	);
-	return semestersWithCourses;
-}
 
 // POST: Handle login
 export async function POST({ request }) {
-	const { username, password } = await request.json();
-
+	const { email, password } = await request.json();
 	try {
-		const user = await getAdminUser(username);
+		const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-		if (!user) {
-			throw error(400, 'Invalid credentials');
+		if (authError) {
+			throw error(400, authError.message);
 		}
 
-		// Compare passwords
-		const match = await bcrypt.compare(password, user.password_hash);
-
-		if (!match) {
-			throw error(400, 'Invalid credentials');
-		}
-
-		// Generate a JWT token
-		const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, {
-			expiresIn: '1h'
-		});
+		const token = data.session.access_token;
 
 		// Set token as a secure HTTP-only cookie
 		return new Response(
@@ -69,11 +40,10 @@ export async function POST({ request }) {
 	}
 }
 
-// GET: Validate token and return data
-export async function GET({ cookies, url }) {
+// GET: Validate token and return user data
+export async function GET({ cookies }) {
 	const token = cookies.get('auth_token');
 
-	// Token verification
 	if (!token) {
 		return new Response(JSON.stringify({ error: 'Not authenticated' }), {
 			status: 401,
@@ -82,26 +52,19 @@ export async function GET({ cookies, url }) {
 	}
 
 	try {
-		// Verify the token
-		const decoded = jwt.verify(token, JWT_SECRET);
+		const { data, error: authError } = await supabase.auth.getUser(token);
 
-		// Check if the request is for all semesters and courses
-		if (url.pathname === '/admin') {
-			const semestersWithCourses = await getSemestersWithCourses();
-			return new Response(JSON.stringify(semestersWithCourses), {
-				status: 200,
-				headers: { 'Content-Type': 'application/json' }
-			});
+		if (authError || !data.user) {
+			throw error(401, 'Invalid token');
 		}
 
-		// Default response
-		return new Response(JSON.stringify({ token, user: decoded }), {
+		return new Response(JSON.stringify(data.user), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' }
 		});
 	} catch (err) {
-		return new Response(JSON.stringify({ error: 'Invalid token' }), {
-			status: 401,
+		return new Response(JSON.stringify({ error: 'An error occurred' }), {
+			status: 500,
 			headers: { 'Content-Type': 'application/json' }
 		});
 	}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	let username = '';
+	let email = '';
 	let password = '';
 	let errorMessage = '';
 	let token = '';
@@ -11,9 +11,11 @@
 	let noteName = '';
 	let svgFile: File | null = null; // Track the selected file
 
-	// Fetch semesters from the server on page load
+	//Fetch semesters from the server on page load
+
 	onMount(async () => {
-		const res = await fetch('/admin');
+		const res = await fetch('/admin/semesters');
+
 		if (res.ok) {
 			const data = await res.json();
 			semesters = data;
@@ -37,7 +39,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ username, password })
+			body: JSON.stringify({ email, password })
 		});
 
 		if (res.ok) {
@@ -97,8 +99,8 @@
 				<div class="-space-y-px rounded-md shadow-sm">
 					<input
 						type="text"
-						bind:value={username}
-						placeholder="Username"
+						bind:value={email}
+						placeholder="Email"
 						required
 						class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
 					/>
