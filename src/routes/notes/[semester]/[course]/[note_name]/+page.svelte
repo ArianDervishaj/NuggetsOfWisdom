@@ -3,7 +3,7 @@
 	import panzoom from 'panzoom';
 
 	export let data;
-
+	console.log(data);
 	let panzoomInstance: ReturnType<typeof panzoom>;
 
 	onMount(() => {
