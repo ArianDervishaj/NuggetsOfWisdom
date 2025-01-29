@@ -40,12 +40,14 @@
 		"@supabase/supabase-js": "^2.48.1",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"bcrypt": "^5.1.1",
+		"bufferutil": "^4.0.9",
 		"cookie": "^1.0.2",
 		"formidable": "^3.5.2",
 		"fs": "0.0.1-security",
 		"jsonwebtoken": "^9.0.2",
 		"panzoom": "^9.4.3",
 		"path": "^0.12.7",
-		"sqlite3": "^5.1.7"
+		"sqlite3": "^5.1.7",
+		"utf-8-validate": "^6.0.5"
 	}
 }
