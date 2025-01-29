@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { supabase } from '$lib/server/db'; // Assuming you have your supabase client configured here
+import { supabase } from '$lib/server/db';
 import { insertNewNotes } from '$lib/server/db';
 
 export async function POST({ request }) {
