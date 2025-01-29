@@ -3,7 +3,7 @@
 	import panzoom from 'panzoom';
 
 	export let data;
-	console.log(data);
+	console.log(data.note.file_path);
 	let panzoomInstance: ReturnType<typeof panzoom>;
 
 	onMount(() => {
@@ -41,8 +41,12 @@
 			id="svg-container"
 			class="svg-container flex h-[60vh] items-center justify-center rounded-lg border border-gray-200 bg-white shadow-md"
 		>
-			<object type="image/svg+xml" data="{`${data.note.file_path}`}" aria-label="svg" class="max-h-full max-w-full cursor-move object-contain"></object>
-
+			<img
+				src={`${data.note.file_path}`}
+				alt="SVG"
+				class="max-h-full max-w-full cursor-move object-contain"
+				
+			/>
 		</div>
 	</div>
 </div>
