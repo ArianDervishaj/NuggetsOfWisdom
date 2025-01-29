@@ -26,7 +26,8 @@ export async function POST({ request }) {
 			.upload(`notes/${file.name}`, file.stream(), {
 				cacheControl: '3600',
 				upsert: false,
-				duplex: 'half'
+				duplex: 'half',
+				contentType: 'image/svg+xml'
 			});
 
 		if (error) {
