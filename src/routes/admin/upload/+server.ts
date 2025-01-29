@@ -33,9 +33,11 @@ export async function POST({ request }) {
 			return json({ error: error.message }, { status: 500 });
 		}
 
+		// Get the public URL for the uploaded file
+		const publicUrl = supabase.storage.from('uploads').getPublicUrl(data.path).data.publicUrl;
+
 		// Insert metadata into the database with the public URL of the file
-		const fileUrl = supabase.storage.from('uploads').getPublicUrl(`notes/${file.name}`).publicURL;
-		await insertNewNotes(course_name, name, fileUrl);
+		await insertNewNotes(course_name, name, publicUrl);
 
 		return json({ success: true });
 	} catch (err) {
