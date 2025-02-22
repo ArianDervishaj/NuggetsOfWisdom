@@ -2,8 +2,12 @@ import { supabase } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 import cookie from 'cookie';
 
-
-// POST: Handle login
+/**
+ * Handles POST requests for user login.
+ * @param {Object} param0 - The request object.
+ * @param {Request} param0.request - The HTTP request object containing user credentials.
+ * @returns {Promise<Response>} A promise that resolves to an HTTP response with login status or error.
+ */
 export async function POST({ request }) {
 	const { email, password } = await request.json();
 	try {
@@ -40,37 +44,10 @@ export async function POST({ request }) {
 	}
 }
 
-// GET: Validate token and return user data
-export async function GET({ cookies }) {
-	const token = cookies.get('auth_token');
-
-	if (!token) {
-		return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-			status: 401,
-			headers: { 'Content-Type': 'application/json' }
-		});
-	}
-
-	try {
-		const { data, error: authError } = await supabase.auth.getUser(token);
-
-		if (authError || !data.user) {
-			throw error(401, 'Invalid token');
-		}
-
-		return new Response(JSON.stringify(data.user), {
-			status: 200,
-			headers: { 'Content-Type': 'application/json' }
-		});
-	} catch (err) {
-		return new Response(JSON.stringify({ error: 'An error occurred' }), {
-			status: 500,
-			headers: { 'Content-Type': 'application/json' }
-		});
-	}
-}
-
-// DELETE: Logout by clearing the auth cookie
+/**
+ * Handles DELETE requests to logout by clearing the auth cookie.
+ * @returns {Promise<Response>} A promise that resolves to an HTTP response indicating successful logout.
+ */
 export async function DELETE() {
 	return new Response(null, {
 		status: 200,

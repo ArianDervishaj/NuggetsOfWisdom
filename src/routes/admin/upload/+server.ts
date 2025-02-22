@@ -2,6 +2,12 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/server/db';
 import { insertNewNotes } from '$lib/server/db';
 
+/**
+ * Handles POST requests to upload a new note.
+ * @param {Object} param0 - The request object.
+ * @param {Request} param0.request - The HTTP request object.
+ * @returns {Promise<Response>} A promise that resolves to an HTTP response indicating success or failure.
+ */
 export async function POST({ request }) {
 	try {
 		// Parse the incoming form data

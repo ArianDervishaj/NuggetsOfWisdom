@@ -1,5 +1,13 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageData } from './\$types';
+
+	/**
+	 * Data object containing semesters information.
+	 * @type {PageData}
+	 * @property {Array} semesters - An array of semester objects.
+	 * @property {string} semesters[].name - The name of the semester.
+	 * @property {string} semesters[].id - The unique identifier of the semester.
+	 */
 	export let data: PageData;
 </script>
 

@@ -2,17 +2,29 @@
 	import { UserSolid } from 'flowbite-svelte-icons';
 	import '../app.css';
 	import { goto } from '$app/navigation';
-	
+
+	/**
+	 * Children components or elements to be rendered within the main content area.
+	 */
 	let { children } = $props();
 
+	/**
+	 * Navigates to the previous page or the current directory path.
+	 */
 	function goBack() {
 		goto('.');
 	}
 
+	/**
+	 * Navigates to the admin page.
+	 */
 	function goAdmin() {
 		goto('/admin');
 	}
 
+	/**
+	 * Navigates to the home page.
+	 */
 	function goHome() {
 		goto('');
 	}

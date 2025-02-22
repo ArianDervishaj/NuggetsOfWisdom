@@ -4,9 +4,17 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
+/**
+ * Creates a Supabase client instance.
+ * @type {import('@supabase/supabase-js').SupabaseClient}
+ */
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Get a list of the semesters from the db
+/**
+ * Fetches a list of semesters from the database.
+ * @returns {Promise<Array>} A promise that resolves to an array of semesters.
+ * @throws {Error} If there is an error fetching the semesters.
+ */
 export async function getSemesters() {
 	const { data, error } = await supabase.from('semesters').select('*');
 	if (error) {
@@ -15,7 +23,12 @@ export async function getSemesters() {
 	return data;
 }
 
-// Get a list of the courses for a specific semester from the db
+/**
+ * Fetches a list of courses for a specific semester from the database.
+ * @param {string} semester - The name of the semester.
+ * @returns {Promise<Array>} A promise that resolves to an array of courses.
+ * @throws {Error} If there is an error fetching the courses.
+ */
 export async function getCourses(semester) {
 	const { data, error } = await supabase
 		.from('courses')
@@ -27,7 +40,12 @@ export async function getCourses(semester) {
 	return data;
 }
 
-// Get a list of the notes for a specific course from the db
+/**
+ * Fetches a list of notes for a specific course from the database.
+ * @param {string} course - The name of the course.
+ * @returns {Promise<Array>} A promise that resolves to an array of notes.
+ * @throws {Error} If there is an error fetching the notes.
+ */
 export async function getNotes(course) {
 	const { data, error } = await supabase
 		.from('notes')
@@ -39,7 +57,12 @@ export async function getNotes(course) {
 	return data;
 }
 
-// Get one note
+/**
+ * Fetches a single note by its name from the database.
+ * @param {string} note_name - The name of the note.
+ * @returns {Promise<Object>} A promise that resolves to the note object.
+ * @throws {Error} If there is an error fetching the note.
+ */
 export async function getNote(note_name) {
 	const { data, error } = await supabase.from('notes').select('*').eq('name', note_name).single();
 	if (error) {
@@ -48,7 +71,12 @@ export async function getNote(note_name) {
 	return data;
 }
 
-// Get course ID from name
+/**
+ * Fetches the course ID for a given course name.
+ * @param {string} course_name - The name of the course.
+ * @returns {Promise<number|null>} A promise that resolves to the course ID or null if not found.
+ * @throws {Error} If there is an error fetching the course ID.
+ */
 async function getCoursesIdFromName(course_name) {
 	const { data, error } = await supabase
 		.from('courses')
@@ -61,7 +89,13 @@ async function getCoursesIdFromName(course_name) {
 	return data ? data.id : null;
 }
 
-// Insert new notes
+/**
+ * Inserts new notes into the database.
+ * @param {string} course_name - The name of the course.
+ * @param {string} name - The name of the note.
+ * @param {string} file_path - The file path of the note.
+ * @throws {Error} If there is an error inserting the notes.
+ */
 export async function insertNewNotes(course_name, name, file_path) {
 	try {
 		const course_id = await getCoursesIdFromName(course_name);
@@ -78,7 +112,12 @@ export async function insertNewNotes(course_name, name, file_path) {
 	}
 }
 
-// Get semester ID from name (similar to the getCoursesIdFromName function)
+/**
+ * Fetches the semester ID for a given semester name.
+ * @param {string} semester_name - The name of the semester.
+ * @returns {Promise<number|null>} A promise that resolves to the semester ID or null if not found.
+ * @throws {Error} If there is an error fetching the semester ID.
+ */
 async function getSemesterIdFromName(semester_name) {
 	const { data, error } = await supabase
 		.from('semesters')
@@ -91,7 +130,10 @@ async function getSemesterIdFromName(semester_name) {
 	return data ? data.id : null;
 }
 
-// Helper function to fetch all semesters with their courses
+/**
+ * Fetches all semesters with their associated courses.
+ * @returns {Promise<Array>} A promise that resolves to an array of semesters with their courses.
+ */
 export async function getSemestersWithCourses() {
 	const semesters = await getSemesters();
 	const semestersWithCourses = await Promise.all(

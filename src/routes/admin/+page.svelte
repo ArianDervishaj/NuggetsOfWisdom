@@ -11,8 +11,9 @@
 	let noteName = '';
 	let svgFile: File | null = null; // Track the selected file
 
-	//Fetch semesters from the server on page load
-
+	/**
+	 * Fetch semesters from the server on page load.
+	 */
 	onMount(async () => {
 		const res = await fetch('/admin/semesters');
 
@@ -22,7 +23,9 @@
 		}
 	});
 
-	// Fetch courses based on the selected semester
+	/**
+	 * Fetch courses based on the selected semester.
+	 */
 	async function fetchCourses() {
 		const semester = semesters.find((s) => s.name === selectedSemester);
 
@@ -33,6 +36,9 @@
 		}
 	}
 
+	/**
+	 * Log in the user with the provided email and password.
+	 */
 	async function login() {
 		const res = await fetch('/admin', {
 			method: 'POST',
@@ -51,6 +57,9 @@
 		}
 	}
 
+	/**
+	 * Log out the user by clearing the token and sending a DELETE request.
+	 */
 	async function logout() {
 		token = ''; // Clear the local token
 		await fetch('/admin', {
@@ -61,7 +70,9 @@
 		});
 	}
 
-	// Function to handle form submission
+	/**
+	 * Handle form submission to upload a new note.
+	 */
 	async function handleSubmit() {
 		if (!selectedSemester || !selectedCourse || !noteName || !svgFile) {
 			errorMessage = 'Please fill in all the fields.';

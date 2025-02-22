@@ -2,9 +2,19 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/state';
 
+	/**
+	 * Data object containing courses information.
+	 * @type {PageData}
+	 * @property {Array} courses - An array of course objects.
+	 * @property {string} courses[].name - The name of the course.
+	 * @property {string} courses[].id - The unique identifier of the course.
+	 */
 	export let data: PageData;
 
-	// access the current path
+	/**
+	 * The current path of the page.
+	 * @type {string}
+	 */
 	const currentPath = page.url.pathname;
 </script>
 

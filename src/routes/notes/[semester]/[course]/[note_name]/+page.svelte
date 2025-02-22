@@ -2,10 +2,25 @@
 	import { onMount } from 'svelte';
 	import panzoom from 'panzoom';
 
+	/**
+	 * Data object containing note details.
+	 * @type {Object}
+	 * @property {Object} note - The note object containing file path and name.
+	 * @property {string} note.file_path - The file path of the note.
+	 * @property {string} note.name - The name of the note.
+	 */
 	export let data;
 	console.log(data.note.file_path);
+
+	/**
+	 * Instance of Panzoom for zooming and panning functionality.
+	 * @type {ReturnType<typeof panzoom>}
+	 */
 	let panzoomInstance: ReturnType<typeof panzoom>;
 
+	/**
+	 * Initializes Panzoom on the SVG container when the component is mounted.
+	 */
 	onMount(() => {
 		const svgContainer = document.getElementById('svg-container') as HTMLElement;
 
@@ -19,7 +34,9 @@
 		}
 	});
 
-	// Function to trigger the download
+	/**
+	 * Triggers the download of the SVG file.
+	 */
 	function downloadSVG() {
 		const link = document.createElement('a');
 
@@ -45,7 +62,6 @@
 				src={`${data.note.file_path}`}
 				alt="SVG"
 				class="max-h-full max-w-full cursor-move object-contain"
-				
 			/>
 		</div>
 	</div>

@@ -1,8 +1,20 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { page } from '$app/state';
+
+	/**
+	 * Data object containing notes information.
+	 * @type {PageData}
+	 * @property {Array} notes - An array of note objects.
+	 * @property {string} notes[].name - The name of the note.
+	 * @property {string} notes[].id - The unique identifier of the note.
+	 */
 	export let data: PageData;
 
+	/**
+	 * The current path of the page.
+	 * @type {string}
+	 */
 	const currentPath = page.url.pathname;
 </script>
 
